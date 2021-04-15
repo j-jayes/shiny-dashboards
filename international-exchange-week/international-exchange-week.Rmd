@@ -1,0 +1,296 @@
+---
+title: "International Exchange Week"
+output: 
+  flexdashboard::flex_dashboard:
+    source_code: embed
+    theme: flatly
+runtime: shiny
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+
+library(flexdashboard)
+library(tidyverse)
+library(shiny)
+library(plotly)
+library(glue)
+library(DT)
+library(janitor)
+library(leaflet)
+
+theme_set(theme_light())
+```
+
+
+```{r}
+
+
+
+```
+
+Welcome
+==================================================================================
+
+.column
+------------------------------------------
+
+<center>
+
+**Welcome to our proposal for the INTC International Exchange Week.** 
+
+This week is all about celebrating different nationalities and making sure the the international visitors to Lund feel welcome. It is a little bit different than usual because of Corona times, but we are sure that it will still be a blast!
+
+If you click on the **Programme** tab you will see what we have planned for each day. By adjusting the inputs, you will see the total cost of the week change in the sidebar. We hope that this is useful!
+
+![INTC](images/INTC_logo.png)
+</center>
+
+
+
+Programme{.storyboard}
+==================================================================================
+
+Total Cost:{.sidebar}
+------------------------------------------
+
+#### Total Cost:
+```{r}
+
+renderPlotly({
+
+  p <- tibble(
+    names = c("Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
+    values = c(sum(70, input$bbq*input$hot_dog), 
+               400*if_else(input$goat == TRUE, 1, 0), 
+               8*input$absolut, 
+               0, 
+               input$bike),
+    order = c(5, 4, 3, 2, 1)) %>%
+    mutate(names = fct_reorder(names, order)) %>% 
+    ggplot(aes(values, names, fill = names, text = glue("{names}, {values}kr"))) +
+    geom_col(show.legend = F) +
+    labs(y = "",
+         x = "Cost") +
+    scale_fill_brewer(palette = "Dark2") +
+    theme(legend.position = "none",
+          panel.grid = element_blank())
+  
+  ggplotly(p, tooltip = "text") 
+
+})
+
+renderDT(
+
+  tibble(
+    names = c("Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
+    values = c(sum(70, input$bbq*input$hot_dog), 
+               400*if_else(input$goat == TRUE, 1, 0), 
+               8*input$absolut, 
+               0, 
+               input$bike)) %>% 
+    adorn_totals(),
+  colnames = c("Day of Week", "Cost"),
+  rownames = FALSE
+
+)
+
+
+```
+
+
+------------------------------------------
+### WEDNESDAY: Outdoor get-together BBQ
+
+![Barbeque](images/BBQ.PNG)
+
+```{r}
+iris_df <- iris %>% as_tibble() %>% 
+  janitor::clean_names()
+
+# iris_df %>% 
+#   ggplot(aes(sepal_length, sepal_width, colour = species)) +
+#   geom_point()
+
+
+
+```
+
+***
+
+The plan for Wednesday is an outdoor get-together. We want to do some barbecuing, perhaps at Stadsparken or Delphi. 
+
+**Select Inputs:**
+```{r}
+sliderInput("bbq", label = "Number of Signups:",
+            min = 5, max = 50, value = 20, step = 1)
+
+sliderInput("hot_dog", label = "Cost of food per person:",
+            min = 5, max = 50, value = 20, step = 1)
+
+renderDT(
+  
+  tibble(
+    
+    names = c("Coal and BBQ Supplies", "BBQ Food"),
+    
+    values = c(70, input$bbq*input$hot_dog)
+    
+  ) %>% 
+    adorn_totals(),
+  colnames = c("Items", "Cost"),
+  rownames = FALSE
+  
+)
+
+
+```
+
+
+
+### THURSDAY: Beachfootball at stadsparken
+
+![Beachfootball](images/beachfootball.PNG)
+
+***
+
+The plan for Friday is to have a beachfootball and volleyball tournament at Stadsparken. We plan to get people to come together and play in teams. It will be such fun!
+
+The prize is very exciting! The best player, who everyone will vote for, is the GOAT. Their prize is to name a goat which we will donate to a village in Africa through [Oxfam Gifts](https://www.oxfamgifts.com/gifts/donate-goat/). 
+
+In their words, *"A hardy goat is the gift of sustainability, which means fertilizer and food for families—especially those living in areas that cannot support less-durable critters"*. Have a look at the link if you want to know more.
+
+Jonathan is happy to buy the goat if it will not fit in the budget. He likes the goat.
+
+```{r}
+
+checkboxInput("goat",
+              "LE Pays for Goat",
+              value = T)
+
+renderDataTable(
+  
+  tibble(
+    names = c("GOAT goat"),
+    values = c(400*if_else(input$goat == TRUE, 1, 0))     
+         ) %>% 
+    adorn_totals(),
+  colnames = c("Items", "Cost"),
+  rownames = FALSE
+  
+)
+
+```
+
+
+### FRIDAY: Daytrip to Österlen/Åhus + Absolut Vodka Guided Tour at the factory
+
+![Absolut Trip](images/ahus.jpg)
+
+***
+Filip has organized an exciting guided tour at the [Absolut Vodka](https://www.absoluthome.com/?gclid=Cj0KCQjwyN-DBhCDARIsAFOELTk2kmM2iZZqppNgxmBNgbvzUe7ZQIRwWfiI1HGG7zmNJuBWrAVXCmUaAhRSEALw_wcB) factory in Åhus. Students who sign up will experience the incomparable story of Absolut Vodka, one of the world's most iconic liquor brands!
+
+We envisage that we will rent two vehicles to take everyone up the coast. This will be a fun day out for all involved, even the designated drivers who will get to experience the beauty of Skåne County.
+
+We want to motivate for a contribution by LE to lower the cost for students involved, given that it is quite pricey. The cost of the day out, including the tour and renting of two cars is 449kr/person with alcohol, and 369kr without.
+
+
+```{r}
+
+sliderInput("absolut", label = "Subsidy provided by LE for day out (SEK)/person:",
+            min = 0, max = 300, value = 100, step = 10)
+
+renderDataTable(
+  
+  tibble(
+    names = c("LE Contribution"),
+    values = c(8*input$absolut)) %>% 
+    adorn_totals(),
+  colnames = c("Item", "Cost"),
+  rownames = FALSE
+  
+)
+
+```
+
+
+Test
+
+### SATURDAY: Daytrip to Lomma beach (if good weather)
+
+![Lomma Beach](images/lomma-beach.jpg)
+
+
+***
+The plan for Saturday is to take a nice evening cycle to Lomma beach to watch the sun go down. It will be such a delight if the weather is good to enjoy the sunset and chat.
+
+We bike together and people can bring their own snacks and such. This will incur no cost for the committee.
+
+
+```{r}
+
+hike <- tibble(
+  
+  lng = c(13.194710, 13.059278),
+  
+  lat = c(55.702888, 55.677439),
+  
+  popup = c("Lund", "Lomma")
+  
+)
+
+# lund_lomma <- read_csv("international-exchange-week/data/lund_lomma_2.csv")
+
+lund_lomma <- read_csv("data/lund_lomma_2.csv")
+
+
+hike_route <- lund_lomma %>% 
+  as_tibble() %>% 
+  select(lng = X, lat = Y) %>% 
+  mutate(popup = "route")
+
+m <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(
+    lng = hike$lng,
+    lat = hike$lat,
+    popup = hike$popup
+             ) %>% 
+  addPolylines(lat = hike_route$lat, 
+               lng = hike_route$lng) %>% 
+  addProviderTiles(providers$CartoDB.Positron)
+m  # Print the map
+
+```
+
+
+### SUNDAY: Bike-party International theme, divide everyone in groups of three 
+
+![Bike Party](images/bike-party.jpg)
+
+***
+You know what it is! A bike party! A Lund classic event, sure to be enjoyed!
+
+We plan to arrange the event and tell people to buy food themselves.
+
+It would be really nice to provide some food though. If there is money available for this purpose, it would be lekker! Slide that slider up!
+
+```{r}
+sliderInput("bike", label = "Food Budget for Bike Party:",
+            min = 0, max = 2000, value = 0, step = 50)
+
+renderDataTable(
+  
+  tibble(
+    names = c("Bike Party Food Cost"),
+    values = c(input$bike)) %>% 
+    adorn_totals(),
+  colnames = c("Item", "Cost"),
+  rownames = FALSE
+  
+)
+
+```
+
+
