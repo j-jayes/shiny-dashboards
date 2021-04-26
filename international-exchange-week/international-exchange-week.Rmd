@@ -2,6 +2,7 @@
 title: "International Exchange Week"
 output: 
   flexdashboard::flex_dashboard:
+    orientation: columns
     source_code: embed
     theme: flatly
 runtime: shiny
@@ -19,6 +20,7 @@ library(glue)
 library(DT)
 library(janitor)
 library(leaflet)
+library(knitr)
 
 theme_set(theme_light())
 ```
@@ -44,6 +46,11 @@ This week is all about celebrating different nationalities and making sure the t
 
 If you click on the **Programme** tab you will see what we have planned for each day. By adjusting the inputs, you will see the total cost of the week change in the sidebar. We hope that this is useful!
 
+We note that cost will depend on the number of sign-ups, which we envisage as being 20 for the opening function.
+
+We will seperate the events such that every activity will happen in a group of 8 - for example, at the beachfootball and volleyball event we will split those who sign up into groups of 8 who will play together and mix teams within those groups of 8.
+
+
 ![INTC](images/INTC_logo.png)
 </center>
 
@@ -55,8 +62,7 @@ Programme{.storyboard}
 Cost Breakdown:{.sidebar}
 ------------------------------------------
 
-#### Bost Breakdown
-We note that cost will depend on the number of sign-ups.
+#### Cost Breakdown
 
 ```{r}
 
@@ -103,25 +109,26 @@ renderDT(
 
 
 ------------------------------------------
-### WEDNESDAY: Outdoor get-together BBQ
+### WEDNESDAY: Outdoor get-together BBQ{data-commentary-width=500}
 
 ![Barbeque](images/BBQ.PNG)
 
-```{r}
-iris_df <- iris %>% as_tibble() %>% 
-  janitor::clean_names()
-
-# iris_df %>% 
-#   ggplot(aes(sepal_length, sepal_width, colour = species)) +
-#   geom_point()
-
-
-
-```
-
 ***
 
-The plan for Wednesday is an outdoor get-together. We want to do some barbecuing, perhaps at Stadsparken or Delphi. 
+The plan for Wednesday is an outdoor get-together. We want to do some barbecuing at Delphi.
+
+**Covid-19 Mitigation Strategy:**
+
+- This event is outdoors in the open air, and as such will mitigate contact between individuals in enclosed spaces which are high risk for Covid-19 transmission.
+- We will make hand sanitizer available at the event.
+- We will have a briefing at the beginning of the event explaining the risks arising from Covid-19, the mitigation strategies we are using, and what they should do if they begin to feel ill. 
+- If anyone begins to feel ill we will encourage them to go home, and we will ask everyone in attendance to self-isolate until the unwell individual has been tested. 
+- We will not share food, plates or utensils between individuals.
+- We will not serve alcohol at the event. This will lower the possibility of people behaving in a way that will result in Covid-19 transmission.
+
+**Time of responsibility**
+
+- The event will take place between 18:00 and 21:00. At 21:00 we will declare the event over, and we will no longer be responsible for the activities of attendees. 
 
 **Select Inputs:**
 ```{r}
@@ -149,15 +156,24 @@ renderDT(
 
 ```
 
-
-
-### THURSDAY: Beachfootball at Delphi
+### THURSDAY: Beachfootball at Delphi{data-commentary-width=500}
 
 ![Beachfootball](images/beachfootball.PNG)
 
 ***
 
 The plan for Friday is to have a beachfootball and volleyball tournament at Delphi We plan to get people to come together and play in teams. It will be such fun!
+
+
+**Covid-19 Mitigation Strategy:**
+- This event is outdoors in the open air, and as such will mitigate contact between individuals in enclosed spaces which are high risk for Covid-19 transmission.
+- We will make hand sanitizer available at the event.
+- We will have a briefing at the beginning of the event explaining the risks arising from Covid-19, the mitigation strategies we are using, and what they should do if they begin to feel ill.
+- If anyone begins to feel ill we will encourage them to go home, and we will ask everyone in attendance to self-isolate until the unwell individual has been tested. 
+- We will not share food, plates or utensils between individuals.
+
+**Time of responsibility**
+
 
 The prize is very exciting! The best player, who everyone will vote for, is the GOAT. Their prize is to name a goat which we will donate to a village in Africa through [Oxfam Gifts](https://www.oxfamgifts.com/gifts/donate-goat/). 
 
@@ -186,7 +202,7 @@ renderDataTable(
 ```
 
 
-### FRIDAY: Daytrip to Österlen/Åhus + Absolut Vodka Guided Tour at the factory
+### FRIDAY: Daytrip to Österlen/Åhus + Absolut Vodka Guided Tour at the factory{data-commentary-width=500}
 
 ![Absolut Trip](images/ahus.jpg)
 
@@ -196,6 +212,19 @@ Filip has organized an exciting trip so that international students will get to 
 We envisage that we will rent two vehicles to take everyone up the coast. This will be a fun day out for all involved!s
 
 We want to motivate for a contribution by LE to lower the cost for students involved, given that it is quite pricey. The cost of the day out, including the tour and renting of two cars is 449kr/person with alcohol, and 369kr without.
+
+**Covid-19 Mitigation Strategy:**
+
+- This event involves transport of individuals in cars and as such we will wear masks while we are in the confined space of the vehicle. We have a box of surgical masks that we will use for this purpose.
+- We will encourage attendees to take a Covid-19 test two days before they come on the trip. 
+- In addition, we will make sure that everyone is feeling healthy before we leave on the day.
+- We will have a briefing at the beginning of the event explaining the risks arising from Covid-19, the mitigation strategies we are using, and what they should do if they begin to feel ill. 
+- If anyone begins to feel ill we will encourage them to go home, and we will ask everyone in attendance to self-isolate until the unwell individual has been tested. 
+- We will not share food, plates or utensils between individuals.
+
+**Time of responsibility**
+
+- The event will take place between 10:00 and 16:00. At 16:00 we will declare the event over, and we will no longer be responsible for the activities of attendees. 
 
 
 ```{r}
@@ -217,9 +246,7 @@ renderDataTable(
 ```
 
 
-Test
-
-### SATURDAY: Daytrip to Lomma beach (if good weather)
+### SATURDAY: Daytrip to Lomma beach{data-commentary-width=500}
 
 ![Lomma Beach](images/lomma-beach.jpg)
 
@@ -228,6 +255,19 @@ Test
 The plan for Saturday is to take a nice evening cycle to Lomma beach to watch the sun go down. It will be such a delight if the weather is good to enjoy the sunset and chat.
 
 We bike together and people can bring their own snacks and such. This will incur no cost for the committee.
+
+**Covid-19 Mitigation Strategy:**
+
+- This event involves cycling to Lomma. We will have groups of 8 individuals cycling together to mitigate the transmission of Covid-19. 
+- The groups will set off from different meeting points in Lund. 
+- Upon arrival at Lomma, the groups will picnic in different places along the beach in the open air.
+- We will have a briefing at the beginning of the event explaining the risks arising from Covid-19, the mitigation strategies we are using, and what they should do if they begin to feel ill. 
+- If anyone begins to feel ill we will encourage them to go home, and we will ask everyone in attendance to self-isolate until the unwell individual has been tested. 
+- We will not share food, plates or utensils between individuals.
+
+**Time of responsibility**
+
+The event will be between 17:00 and 20:00. At 20:00 we will declare the event over and will no longer be responsible for the actions of the attendees. 
 
 
 ```{r}
@@ -267,7 +307,7 @@ m  # Print the map
 ```
 
 
-### SUNDAY: Bike-party International theme, divide everyone in groups of three 
+### SUNDAY: Bike-party: international theme {data-commentary-width=500}
 
 ![Bike Party](images/bike-party.png)
 
@@ -275,6 +315,8 @@ m  # Print the map
 You know what it is! A bike party! A Lund classic event, sure to be enjoyed!
 
 We plan to arrange the event, divide up the signups into teams of 3, and get each team to prepare a dish that reflects their culture.
+
+
 
 It would be really nice to provide some food budget. If there is more money available for this purpose, it would be wonderful! Slide that slider up!
 
